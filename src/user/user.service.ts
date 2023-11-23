@@ -6,8 +6,12 @@ const prisma = new PrismaClient();
 @Injectable()
 export class UserService {
   async create(username: string, email: string) {
+    const candidate = await this.findOneByEmail(email);
+    if (candidate) {
+      return { message: 'Такой пользователь уже существует' };
+    }
     const user = await prisma.user.create({ data: { username, email } });
-    return user;
+    return { message: 'Пользователь создан!', user };
   }
 
   findAll() {
@@ -18,8 +22,8 @@ export class UserService {
     return prisma.user.findUnique({ where: { id } });
   }
 
-  findOneByEmail(username: string) {
-    return prisma.user.findFirst({ where: { username } });
+  findOneByEmail(email: string) {
+    return prisma.user.findUnique({ where: { email } });
   }
 
   async update(

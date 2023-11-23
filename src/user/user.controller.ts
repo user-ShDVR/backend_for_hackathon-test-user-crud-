@@ -12,18 +12,18 @@ import { ApiTags } from '@nestjs/swagger';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 
-@Controller('user')
-@ApiTags('auth')
+@Controller('users')
+@ApiTags('users')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Post()
   async createUser(@Body() createUserDto: CreateUserDto) {
-    const user = await this.userService.create(
-      createUserDto.email,
+    const res = await this.userService.create(
       createUserDto.username,
+      createUserDto.email,
     );
-    return { message: 'Пользователь создан!', user };
+    return res;
   }
 
   @Get()
